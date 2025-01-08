@@ -1,26 +1,24 @@
+import timeit
+
 from trie import Trie
 
 
 class Homework(Trie):
+
     def count_words_with_suffix(self, pattern) -> int:
-        if not isinstance(pattern, str) or not pattern:
+        if not isinstance(pattern, str):
             raise TypeError(
-                f"Illegal argument for countWordsWithSuffix: suffix = '{pattern}' must be a non-empty string"
+                f"Illegal argument for countWordsWithSuffix: pattern = {pattern} must be a string"
             )
+        if not pattern:
+            raise ValueError("Suffix must not be empty.")
 
-        def _collect_suffix(node, suffix):
-            count = 0
-
-            if node.value is not None and suffix.endswith(pattern):
+        count = 0
+        all_keys = self.keys()  # Отримуємо всі слова з дерева
+        for word in all_keys:
+            if word.endswith(pattern):  # Перевіряємо, чи слово закінчується на суфікс
                 count += 1
-
-            for char, child in node.children.items():
-                count += _collect_suffix(child, suffix + char)
-
-            return count
-
-        # Check recursively
-        return _collect_suffix(self.root, "")
+        return count
 
     def has_prefix(self, prefix) -> bool:
         if not isinstance(prefix, str) or not prefix:
